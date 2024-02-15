@@ -3,13 +3,15 @@
 namespace Rompetomp\InertiaBundle\EventListener;
 
 use Rompetomp\InertiaBundle\Service\InertiaInterface;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
+use Symfony\Component\HttpKernel\KernelEvents;
 
-/**
- * Class InertiaListener.
- */
+
+#[AsEventListener(event: KernelEvents::REQUEST, method: "onKernelRequest")]
+#[AsEventListener(event: KernelEvents::RESPONSE, method: "onKernelResponse")]
 class InertiaListener
 {
     /**

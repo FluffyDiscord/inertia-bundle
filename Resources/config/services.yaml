@@ -1,13 +1,6 @@
 services:
   rompetomp_inertia.inertia:
     class: Rompetomp\InertiaBundle\Service\Inertia
-    public: false
-    arguments:
-      $engine: '@twig'
-      $requestStack: '@request_stack'
-      $serializer: '@serializer'
-    calls:
-      - setContainer: ['@service_container']
 
   Rompetomp\InertiaBundle\Service\InertiaInterface: '@rompetomp_inertia.inertia'
 
@@ -29,9 +22,6 @@ services:
       - { name: twig.extension }
 
   Rompetomp\InertiaBundle\EventListener\InertiaListener:
-    tags:
-      - { name: kernel.event_listener, event: kernel.request }
-      - { name: kernel.event_listener, event: kernel.response }
     arguments:
       $inertia: '@rompetomp_inertia.inertia'
       $debug: '%kernel.debug%'

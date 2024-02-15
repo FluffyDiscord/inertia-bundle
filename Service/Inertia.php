@@ -3,7 +3,7 @@
 namespace Rompetomp\InertiaBundle\Service;
 
 use Rompetomp\InertiaBundle\LazyProp;
-use Symfony\Component\DependencyInjection\ContainerAwareTrait;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -11,12 +11,11 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Contracts\Service\ResetInterface;
 use Twig\Environment;
 
-class Inertia implements InertiaInterface
+class Inertia implements InertiaInterface, ResetInterface
 {
-    use ContainerAwareTrait;
-
     /** @var string */
     protected $rootView;
 
@@ -25,6 +24,9 @@ class Inertia implements InertiaInterface
 
     /** @var SerializerInterface */
     protected $serializer;
+
+    /** @var ContainerInterface */
+    protected $container;
 
     /** @var array */
     protected $sharedProps = [];
@@ -50,12 +52,19 @@ class Inertia implements InertiaInterface
     /**
      * Inertia constructor.
      */
-    public function __construct(string $rootView, Environment $engine, RequestStack $requestStack, ?SerializerInterface $serializer = null)
+    public function __construct(
+        string $rootView,
+        Environment $engine,
+        RequestStack $requestStack,
+        ?SerializerInterface $serializer = null,
+        ContainerInterface $container,
+    )
     {
         $this->engine = $engine;
         $this->rootView = $rootView;
         $this->requestStack = $requestStack;
         $this->serializer = $serializer;
+        $this->container = $container;
     }
 
     public function share(string $key, $value = null): void
@@ -246,5 +255,12 @@ class Inertia implements InertiaInterface
     private static function array_only($array, $keys)
     {
         return array_intersect_key($array, array_flip((array) $keys));
+    }
+
+    public function reset(): void
+    {
+        $this->sharedContext = [];
+        $this->sharedViewData = [];
+        $this->sharedProps = [];
     }
 }
