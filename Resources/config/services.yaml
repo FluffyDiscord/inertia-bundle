@@ -1,6 +1,12 @@
 services:
   rompetomp_inertia.inertia:
     class: Rompetomp\InertiaBundle\Service\Inertia
+    public: true
+    arguments:
+      $engine: '@twig'
+      $requestStack: '@request_stack'
+      $serializer: '@serializer'
+      $container: '@service_container'
 
   Rompetomp\InertiaBundle\Service\InertiaInterface: '@rompetomp_inertia.inertia'
 
