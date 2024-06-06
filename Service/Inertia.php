@@ -56,7 +56,7 @@ class Inertia implements InertiaInterface, ResetInterface
         string $rootView,
         Environment $engine,
         RequestStack $requestStack,
-        ?SerializerInterface $serializer = null,
+        ?SerializerInterface $serializer,
         ContainerInterface $container,
     )
     {
